@@ -1,0 +1,66 @@
+---
+sidebar: ae_sidebar
+permalink: ae_quickstart_trigger.html
+folder: ae/quickstart
+description: Gravitee Alert Engine - Trigger
+toc: false
+keywords: Gravitee, API Platform, Alert, Alert Engine, documentation, manual, guide, reference, api
+---
+
+= Trigger
+
+The first thing to do is to configure a trigger with the following information:
+
+|===
+|Field Name |Field Description
+
+|id
+|A unique identifier for your trigger
+
+|condition
+|The condition to trigger or not
+
+|cancel
+|True to cancel a trigger, default false
+
+|notifications
+|Array of notifications to execute
+
+|___type
+|The type of notification
+
+|___configuration
+|The specific configuration of the notification
+|===
+
+
+```json
+{
+    "id": "unique-id",
+    "condition": "$[?(@.type == 'HC' && @.event.api == 'XXX.XXX.XXX')]",
+    "cancel": false,
+    "notifications": [
+        {
+            "type": "email",
+            "configuration": {
+                "host": "smtp.host.com",
+                "port": 587,
+                "username": "username",
+                "password": "password",
+                "from": "from@email.com",
+                "to": "to@email.com",
+                "subject": "[Gravitee Alert Engine] HealthCheck status changed for API ${event.api} to ${event.new_status}",
+                "templateName": "alert_HC.html"
+            }
+        },
+        {
+            "type": "slack",
+            "configuration": {
+                "workspace": "",
+                "channel": "",
+                ...
+            }
+        }
+    ]
+}
+```

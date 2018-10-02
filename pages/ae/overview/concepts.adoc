@@ -1,0 +1,77 @@
+= Concepts
+:page-sidebar: ae_sidebar
+:page-permalink: ae_overview_concepts.html
+:page-folder: ae/overview
+
+== Trigger
+
+A *Trigger* is the configuration element of the events you want to track and it's composed of:
+
+- a unique id
+- a https://github.com/json-path/JsonPath[JsonPath] condition which will trigger the alert
+- a boolean used to cancel a previous registered trigger with its id
+- an array of notifications with the configuration (smtp config for email*)
+
+_*Email notifications allow to define a template which is processed by https://freemarker.apache.org[freemarker template engine]_
+
+== Event
+
+An *Event* typically represents a KV object with:
+
+- a type
+- a timestamp
+- a context
+
+== Example
+
+For example if i want to be alerted with an email when i receive an event of type `HC` for the API `123`. I will have the below trigger:
+
+```json
+{
+    "id": "hc-123",
+    "condition": "$[?(@.type == 'HC' && @.event.api == '123')]",
+    "notifications": [
+        {
+            "type": "email",
+            "configuration": {
+                "host": "smtp.host.com",
+                "port": 587,
+                "username": "username",
+                "password": "password",
+                "from": "from@email.com",
+                "to": "to@email.com",
+                "subject": "[Gravitee.io] HealthCheck status changed for API ${event.api}",
+                "templateName": "alert_HC.html"
+            }
+        }
+    ]
+}
+```
+
+Considering i receive two events:
+
+Event1:
+```json
+{
+    "timestamp": 1538473393,
+    "context": "localhost:8083",
+    "type": "HC",
+    "event": {
+        "api": "123"
+    }
+}
+```
+
+Event2:
+```json
+{
+    "timestamp": 1538476243,
+    "context": "localhost:8083",
+    "type": "HC",
+    "event": {
+        "api": "999"
+    }
+}
+```
+
+An email will be sent when the Alert Engine will receive the Event1, but nothing for the Event2.

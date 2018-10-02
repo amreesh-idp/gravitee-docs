@@ -1,0 +1,46 @@
+= Configuration
+:page-sidebar: ae_sidebar
+:page-permalink: ae_installguide_configuration.html
+:page-folder: ae/installation-guide
+:page-description: Gravitee Alert Engine - Configuration
+:page-toc: false
+:page-keywords: Gravitee, API Platform, Alert, Alert Engine, documentation, manual, guide, reference, api
+
+Gravitee allows you to externalize your configuration via the `gravitee.yml` file that can be found under `GRAVITEE_HOME/config` folder.
+
+Copy plugins (alerts/notifiers) in the `GRAVITEE_HOME/plugins` folder and override the following configuration if necessary.
+
+Default configuration:
+```yaml
+services:
+  core:
+    http:
+      enabled: true
+      port: 18084
+      host: localhost
+      authentication:
+        # authentication type to be used for the core services
+        # - none : to disable authentication
+        # - basic : to use basic authentication
+        # default is "basic"
+        type: basic
+        users:
+          admin: adminadmin
+  metrics:
+    enabled: true
+    prometheus:
+      enabled: true
+
+alerts:
+  vertx:
+    enabled: true
+    hazelcast:
+      config:
+        path: ${gravitee.home}/config/hazelcast.xml
+
+notifiers:
+  email:
+    enabled: true
+    templates:
+      path: ${gravitee.home}/templates
+```
